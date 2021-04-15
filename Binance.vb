@@ -1,5 +1,9 @@
-﻿Imports Skender.Stock.Indicators 'https://daveskender.github.io/Stock.Indicators/docs/GUIDE.html
+﻿'https://github.com/Dellai-V/BinanceRobotCode
+Imports Skender.Stock.Indicators
 Imports Binance.Net
+
+'dotnet add package Skender.Stock.Indicators
+'dotnet add package Binance.Net
 
 Public Class MARKET
     Public Name As String
@@ -43,7 +47,6 @@ Public Class Binance
     Public Shared asset As New List(Of ASSET)
     Public Shared market As New List(Of MARKET)
 #Region "START"
-
     Public Shared Sub LoadAPI()
         api.APIkey = AppSetting.APIkey
         api.APISecret = AppSetting.APIsecret

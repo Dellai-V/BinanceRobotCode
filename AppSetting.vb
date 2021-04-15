@@ -1,4 +1,5 @@
-﻿Public Class AppSetting
+﻿'https://github.com/Dellai-V/BinanceRobotCode
+Public Class AppSetting
     Public Shared ActiveTrade As Boolean = False ' if true, automatic transactions will be active
 
     Public Shared APIkey As String = ""

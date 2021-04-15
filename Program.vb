@@ -1,4 +1,4 @@
-'https://github.com/Dellai-V/Binance-Robot-Wallet
+'https://github.com/Dellai-V/BinanceRobotCode
 Module Program
     Sub Main(args As String())
         Dim timeChart As DateTime = DateTime.Now
@@ -8,7 +8,7 @@ Module Program
         Console.ForegroundColor = ConsoleColor.Black
 
         Console.WriteLine("___ Binance Robot Wallet ___")
-        Console.WriteLine("Source : https://github.com/Dellai-V/Binance-Robot-Wallet")
+        Console.WriteLine("Source : https://github.com/Dellai-V/BinanceRobotCode")
         Binance.LoadAPI()
         Binance.OHLC()
         Script.S_priority()

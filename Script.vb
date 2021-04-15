@@ -1,4 +1,6 @@
-﻿Imports Skender.Stock.Indicators
+﻿'https://github.com/Dellai-V/BinanceRobotCode
+'https://daveskender.github.io/Stock.Indicators/docs/GUIDE.html
+Imports Skender.Stock.Indicators
 Public Class Script
     Public Shared Sub S_priority()
         Dim Priority() As Integer
