@@ -1,5 +1,14 @@
 ﻿'https://github.com/Dellai-V/BinanceRobotCode
+'ActiveTrade: If True, it will make real transactions.
+'APIkey     : Your Binance API key.
+'APIsecret  : Your Binance API secret.
+'Asset      : Assets you want To trade On.
+'Split      : Proportion you wish To have In your wallet Of the corresponding asset.
+'Period     : Period with which the charts must work. (1W, 3D, 1D, 12h, 8h, 6h, 4h, 2h, 1h, 30m, 15m, 5m, 3m, 1m)
+'TimeChart  : Charts update rate In seconds.
+'TimeTrade  : Transaction update rate In seconds.
 Public Class AppSetting
+
     Public Shared ActiveTrade As Boolean = False ' if true, automatic transactions will be active
 
     Public Shared APIkey As String = ""
