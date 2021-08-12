@@ -6,7 +6,8 @@
 'Split      : Proportion you wish To have In your wallet Of the corresponding asset.
 'Period     : Period with which the charts must work. (1W, 3D, 1D, 12h, 8h, 6h, 4h, 2h, 1h, 30m, 15m, 5m, 3m, 1m)
 'TimeChart  : Charts update rate In seconds.
-'TimeTrade  : Transaction update rate In seconds
+'TimeTrade  : Transaction update rate In seconds.
+'OrdersReset: Cancel all active orders.
 Public Class AppSetting
 
     Public Shared ActiveTrade As Boolean = False ' if true, automatic transactions will be active
@@ -19,6 +20,7 @@ Public Class AppSetting
     Public Shared Period As String = "1D"
     Public Shared TimeChart As Integer = 5 '5 sec
     Public Shared TimeTrade As Integer = 60 '1 min
+    Public Shared OrdersReset As Boolean = False
 
 
     'Public Shared ActiveTrade As Boolean = False
@@ -29,5 +31,6 @@ Public Class AppSetting
     'Public Shared Period As String = "3D"
     'Public Shared TimeChart As Integer = 20
     'Public Shared TimeTrade As Integer = 180
+    'Public Shared OrdersReset As Boolean = False
 
 End Class
