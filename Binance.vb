@@ -18,6 +18,8 @@ Public Class MARKET
     Public Price As Decimal
     Public PriceMin As Decimal
     Public PriceMax As Decimal
+    Public Sma As Decimal
+
 
     Public Periodo As String
     Public Charts As New List(Of Quote)
@@ -243,7 +245,7 @@ Public Class Binance
     End Function
 #End Region
 #Region "Trade"
-    Public Sub CancelOrders(Optional Symbol As String = Nothing)
+    Public Shared Sub CancelOrders(Optional Symbol As String = Nothing)
         Try
             If Symbol = Nothing Then
                 For x = 0 To market.Count - 1
@@ -286,6 +288,9 @@ Public Class Binance
                     Dim ordine = api.client.Spot.Order.PlaceOrder(m.Name, Enums.OrderSide.Buy, Enums.OrderType.Market, Mdecimal(Volume, m.MinVolume))
                     Log("BUY : " & ordine.Data.Symbol & " Volume : " & ordine.Data.Quantity & " Price : " & m.Price & " ID : " & ordine.Data.OrderId)
                     GetBalance()
+                    If m.Quote = 0 Then
+                        api.client.Spot.Order.PlaceOrder(m.Name, Enums.OrderSide.Sell, Enums.OrderType.Limit, Mdecimal(Volume * 0.8, m.MinVolume), price:=Mdecimal(m.Price * 1.1, m.MinPrice))
+                    End If
                     Exit For
                 Catch ex As Exception
                     Log("ERROR BUY : " & m.Name & "  |  Volume : " & Volume & " /!\ " & ex.Message)
@@ -330,21 +335,16 @@ Public Class Binance
 #Region "LOG"
     Public Shared Sub Console_App()
         Console.Clear()
-        Console.ForegroundColor = ConsoleColor.DarkGray
-        Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20}", "MARCKET", "Price", "High", "Low")
-        Console.ForegroundColor = ConsoleColor.Black
+        Console.WriteLine("{0,-13} {1,-20} {2,-20} {3,-20} {4,-20} {5,-20} {6,-1}", "|", "MARCKET", "Price", "High", "Low", "SMA", "|")
         For Each m As MARKET In market
-            Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20}", m.Name, m.Price, m.PriceMax, m.PriceMin)
+            Console.WriteLine("{0,-13} {1,-20} {2,-20} {3,-20} {4,-20} {5,-20} {6,-1}", "|", m.Name, m.Price, m.PriceMax, m.PriceMin, m.Sma, "|")
         Next
-        Console.WriteLine("")
-        Console.ForegroundColor = ConsoleColor.DarkGray
-        Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20} {4,-20}", "ASSET", "Balance", "Free", "Saving", "Ideal")
-        Console.ForegroundColor = ConsoleColor.Black
+        Console.WriteLine("========================================================================================================================")
+        Console.WriteLine("{0,-13} {1,-20} {2,-20} {3,-20} {4,-20} {5,-20} {6,-1}", "|", "ASSET", "Balance", "Free", "Saving", "Ideal", "|")
         For Each a As ASSET In asset
-            Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20} {4,-20}", a.Name, a.Balance, a.BalanceFree, a.BalanceLending, a.BalanceIdeal)
+            Console.WriteLine("{0,-13} {1,-20} {2,-20} {3,-20} {4,-20} {5,-20} {6,-1}", "|", a.Name, a.Balance, a.BalanceFree, a.BalanceLending, a.BalanceIdeal, "|")
         Next
-        Console.WriteLine("")
-        Console.ForegroundColor = ConsoleColor.DarkGray
+        Console.WriteLine("========================================================================================================================")
         For Each a As ASSET In asset
             Console.WriteLine("Total Balance : " & Math.Round(BTCtot, 8) & " " & a.Name)
             Exit For

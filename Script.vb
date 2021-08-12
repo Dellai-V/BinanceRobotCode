@@ -2,15 +2,15 @@
 'https://daveskender.github.io/Stock.Indicators/docs/GUIDE.html
 Imports Skender.Stock.Indicators
 Public Class Script
+    Public Shared Priority() As Integer
     Public Shared Sub S_priority()
-        Dim Priority() As Integer
         ReDim Priority(Binance.asset.Count - 1)
         For Each m As MARKET In Binance.market
             Dim UO As IEnumerable(Of UltimateResult) = Indicator.GetUltimate(m.Charts, 7, 14, 28)
             If UO.Last.Ultimate IsNot Nothing Then
                 If UO.Last.Ultimate < 20 Then
                     Priority(m.Base) += 1 'buy
-                ElseIf uo.Last.Ultimate > 80 Then
+                ElseIf UO.Last.Ultimate > 80 Then
                     Priority(m.Quote) += 1 'sell
                 End If
             End If
@@ -132,16 +132,18 @@ Public Class Script
                 End If
             Next
         Next
-        Dim pmin As Integer = 0
+        Dim pm As Integer = 0
         For n = 0 To Priority.Length - 1
             Priority(n) = Priority(n) * Binance.asset(n).Split
-            If Priority(n) < Priority(pmin) Then
-                pmin = n
+            If Priority(n) > Priority(pm) Then
+                pm = n
             End If
         Next
-        Priority(pmin) = 0
         For n = 0 To Priority.Length - 1
-            Priority(n) = (Priority(n) ^ 2)
+            '  Priority(n) = (Priority(n) ^ 2)
+            If n <> pm Then
+                Priority(n) = 0
+            End If
         Next
         Dim prioTot As Integer = 0
         For n As Integer = 0 To Binance.asset.Count - 1
@@ -160,7 +162,7 @@ Public Class Script
         If Binance.api.stato = True Then
             For Each m As MARKET In Binance.market
 
-                Dim SMA As Decimal = Indicator.GetSma(m.Charts, 10).Last.Sma
+                Dim SMA As Decimal = Indicator.GetSma(m.Charts, 5).Last.Sma
                 m.Sma = SMA
                 Dim base As ASSET = Binance.asset(m.Base)
                 Dim quote As ASSET = Binance.asset(m.Quote)
@@ -168,13 +170,13 @@ Public Class Script
                     'BUY quote >to> base
                     If SMA * 0.99 > m.Price Then
                         If AppSetting.ActiveTrade Then
-                            Binance.MBuy(m, 60)
+                            Binance.MBuy(m, 20)
                         Else
                             Binance.Log("TEST BUY : " & m.Name & "  Price : " & m.Price)
                         End If
-                    ElseIf SMA * 1.05 > m.Price And quote.BalanceIdeal = 0 Then
+                    ElseIf SMA * 0.99 < m.Price And Priority(m.Base) > Priority(m.Quote) * 2.5 And base.Balance + base.BalanceLending < base.BalanceIdeal * 0.85 Then
                         If AppSetting.ActiveTrade Then
-                            Binance.MBuy(m, 300)
+                            Binance.MBuy(m, 200)
                         Else
                             Binance.Log("TEST BUY : " & m.Name & "  Price : " & m.Price)
                         End If
@@ -184,13 +186,16 @@ Public Class Script
                     'SELL base >to> quote
                     If SMA * 1.01 < m.Price Then
                         If AppSetting.ActiveTrade Then
-                            Binance.MSell(m, 60)
+                            If m.Quote = 0 And quote.BalanceIdeal = 0 Then
+                                Binance.CancelOrders(m.Name)
+                            End If
+                            Binance.MSell(m, 20)
                         Else
                             Binance.Log("TEST SELL : " & m.Name & "  Price : " & m.Price)
                         End If
-                    ElseIf SMA * 0.95 < m.Price And base.BalanceIdeal = 0 Then
+                    ElseIf SMA * 1.01 > m.Price And Priority(m.Quote) > Priority(m.Base) * 2.5 And quote.Balance + quote.BalanceLending < quote.BalanceIdeal * 0.85 Then
                         If AppSetting.ActiveTrade Then
-                            Binance.MSell(m, 300)
+                            Binance.MSell(m, 200)
                         Else
                             Binance.Log("TEST SELL : " & m.Name & "  Price : " & m.Price)
                         End If

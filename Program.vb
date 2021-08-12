@@ -1,16 +1,18 @@
 'https://github.com/Dellai-V/BinanceRobotCode
+Imports System.Threading
+
 Module Program
     Sub Main(args As String())
         Dim timeChart As DateTime = DateTime.Now
         Dim timeTrade As DateTime = DateTime.Now.AddSeconds(AppSetting.TimeTrade)
 
-        Console.BackgroundColor = ConsoleColor.Gray
-        Console.ForegroundColor = ConsoleColor.Black
-
-        Console.WriteLine("___ Binance Robot Wallet ___")
+        Console.WriteLine("========== Binance Robot Code ==========")
         Console.WriteLine("Source : https://github.com/Dellai-V/BinanceRobotCode")
         Binance.LoadAPI()
         Binance.OHLC()
+        If AppSetting.OrdersReset = True Then
+            Binance.CancelOrders()
+        End If
         Script.S_priority()
         Binance.Console_App()
 
@@ -26,6 +28,7 @@ Module Program
                 Script.StartTrade()
                 timeTrade = DateTime.Now.AddSeconds(AppSetting.TimeTrade)
             End If
+            Thread.Sleep(AppSetting.TimeChart)
         End While
     End Sub
 End Module
